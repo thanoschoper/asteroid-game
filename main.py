@@ -3,6 +3,7 @@ win = Turtle()
 import random
 import math
 from playsound import playsound
+import threading
 
 screen = Screen()
 
@@ -93,8 +94,8 @@ class Asteroid(Turtle):
     x = (self.dx + x - screenMinX) % (screenMaxX - screenMinX) + screenMinX
     y = (self.dy + y - screenMinY) % (screenMaxY - screenMinY) + screenMinY
     
-    self.goto(x,y)
     
+    self.goto(x,y)
   def blowUp(self):
     self.goto(-300,0)
 
@@ -112,6 +113,7 @@ class SpaceShip(Turtle):
     self.dy = dy
     self.screen = screen   
     self.bullets = []
+    self.shape("ship")
     
 
     
@@ -153,6 +155,14 @@ class SpaceShip(Turtle):
     y = math.sin(math.radians(angle))
     self.dx = self.dx + x
     self.dy = self.dy + y
+
+  def slowEngine(self):
+    angle = self.heading()
+    x = math.cos(math.radians(angle))
+    y = math.sin(math.radians(angle))
+    self.dx = self.dx - x
+    self.dy = self.dy - y 
+
   
   def turnTowards(self,x,y):
     if x < self.xcor():
@@ -200,7 +210,19 @@ for k in range(5):
   asteroid = Asteroid(screen,dx,dy,x,y,random.randint(1,3))
 
   asteroids.append(asteroid)
-
+def ssd(d, w):
+  print('click')
+def create_game_over_button(asd, w):
+    button = Turtle()
+    button.penup()
+    button.goto(0,0)
+    button.color("white")
+    button.shape("square")
+    button.shapesize(2,2)
+    button.onclick(ssd)
+    button.write("Play Again",font=("Arial",30),align="center")
+    button.hideturtle()
+    button.showturtle()
 def play():
   
   ship.move()
@@ -209,8 +231,10 @@ def play():
   for asteroid in asteroids:
     asteroid.move()
     if intersect(ship,asteroid):
-      write("BOOM!!!",font=("Arial",30),align="center")
       gameover = True
+
+      #game over button
+      create_game_over_button()
   
   ship.powPow(asteroids)
   
@@ -237,17 +261,23 @@ def go():
 def fire():         
   ship.fireBullet()
 
-ht()
+def slow():
+  ship.slowEngine()
+
+while True:
+  screen.onkeypress(turnLeft,"Left")
+  screen.onkeypress(turnRight, 'Right')
+  screen.onkeypress(go, 'Up')
+  screen.onkeypress(slow, "Down")
+  screen.onkeypress(fire, 'space')
+  screen.listen()
+  break
 
 screen.tracer(0)
 
-screen.onkey(turnLeft,"Left")
-screen.onkey(turnRight, 'Right')
-screen.onkey(go, 'Up')
-screen.onkey(fire, 'space')
-screen.listen()
 
-import threading
+
+
 
 def play_sound_thread():
   while True:
