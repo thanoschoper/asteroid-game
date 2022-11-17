@@ -210,16 +210,14 @@ for k in range(5):
   asteroid = Asteroid(screen,dx,dy,x,y,random.randint(1,3))
 
   asteroids.append(asteroid)
-def ssd(d, w):
-  print('click')
-def create_game_over_button(asd, w):
+
+def create_game_over_button():
     button = Turtle()
     button.penup()
     button.goto(0,0)
     button.color("white")
     button.shape("square")
     button.shapesize(2,2)
-    button.onclick(ssd)
     button.write("Play Again",font=("Arial",30),align="center")
     button.hideturtle()
     button.showturtle()
@@ -264,12 +262,16 @@ def fire():
 def slow():
   ship.slowEngine()
 
+def running():
+  print("running")
+
 while True:
   screen.onkeypress(turnLeft,"Left")
   screen.onkeypress(turnRight, 'Right')
   screen.onkeypress(go, 'Up')
   screen.onkeypress(slow, "Down")
   screen.onkeypress(fire, 'space')
+  screen.onkey(play, 'r')
   screen.listen()
   break
 
