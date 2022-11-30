@@ -29,6 +29,9 @@ write("Use the arrow keys to move and 'space bar' to fire", align="center")
 goto(0, 0)
 color("lightblue")
 
+def clamp_fucntion (no, min_no, max_no):
+        n = max(min(no, max_no), min_no)
+        return n
 
 class Bullet(Turtle):
   def __init__(self,screen,x,y,heading):
@@ -148,27 +151,27 @@ class SpaceShip(Turtle):
   
   def fireBullet(self):
     self.bullets.append(Bullet(self.screen, self.xcor(), self.ycor(), self.heading()))
-  
+
   def fireEngine(self):
     angle = self.heading()
     x = math.cos(math.radians(angle))
     y = math.sin(math.radians(angle))
-    self.dx = self.dx + x
-    self.dy = self.dy + y
+    self.dx = clamp_fucntion(self.dx + x, 0, 5)
+    self.dy = clamp_fucntion(self.dy + y, 0, 5)
 
   def slowEngine(self):
     angle = self.heading()
     x = math.cos(math.radians(angle))
     y = math.sin(math.radians(angle))
-    self.dx = self.dx - x
-    self.dy = self.dy - y 
+    self.dx = clamp_fucntion(self.dx - x, -5, 0)
+    self.dy = clamp_fucntion(self.dy - y, -5, 0)
 
   
   def turnTowards(self,x,y):
     if x < self.xcor():
-      self.left(7)
+      self.left(5)
     if x > self.xcor():
-      self.right(7)
+      self.right(5)
    
   def getRadius(self):
       return 10
@@ -178,7 +181,8 @@ class SpaceShip(Turtle):
   
   def getDY(self):
       return self.dy
-
+  
+  
 def intersect(object1,object2):
   dist = math.sqrt((object1.xcor() - object2.xcor())**2 + (object1.ycor() - object2.ycor())**2)
   
@@ -233,6 +237,7 @@ def play():
 
       #game over button
       create_game_over_button()
+      
   
   ship.powPow(asteroids)
   
@@ -281,9 +286,9 @@ screen.tracer(0)
 
 
 
-def play_sound_thread():
-  while True:
-    playsound('sounds\\trektheme.wav')
+#def play_sound_thread():
+  #while True:
+    #playsound('sounds\\trektheme.wav')
 
 music_thread = threading.Thread(target=play_sound_thread)
 music_thread.start()
